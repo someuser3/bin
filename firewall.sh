@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This script creates a new chain and appends rules to it.
+# NOTE: re-running the script will continue to add rules to
+# the chain regardless whether they already exist or not.
+
 # Create a new iptables chain
 iptables -N LAB-8
 
