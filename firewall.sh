@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create a new ptables chain
+# Create a new iptables chain
 iptables -N LAB-8
 
 # Allow inbound ssh connections
