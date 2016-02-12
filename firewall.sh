@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create a new chan
+# Create a new ptables chain
 iptables -N LAB-8
 
 # Allow inbound ssh connections
@@ -24,4 +24,3 @@ iptables -A LAB-8 -p udp --dport 138 -j ACCEPT
 iptables -A LAB-8 -p tcp --dport 139 -j ACCEPT
 iptables -A LAB-8 -p tcp --dport 445 -j ACCEPT
 iptables -A LAB-8 -p udp --dport 445 -j ACCEPT
-
