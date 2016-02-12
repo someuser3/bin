@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/root/bin/firewall.sh
+/root/projects/bin/firewall.sh
 
 sleep 30
 
