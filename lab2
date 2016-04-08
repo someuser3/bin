@@ -59,13 +59,13 @@ echo
 read -r -p "Would you like to test a different number? [y/N] " response
 case $response in
   ([yY][eE][sS]|[yY])
-  # Restarting the script without creating a subshell.
-  # Credits to https://www.gnu.org/software/bash/manual/bashref.html#index-exec
-  exec $0
-  ;;
+    # Restarting the script without creating a subshell.
+    # Credits to https://www.gnu.org/software/bash/manual/bashref.html#index-exec
+    exec $0
+    ;;
   *)
     echo
     echo "It was fun! Thanks!!!"
     echo
-  ;;
+    ;;
 esac
