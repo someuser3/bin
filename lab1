@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Lab Objective: Prompt the user for a number and check to see if it's larger than 5.
+#
+# Create a script called lab1.sh
+# Prompt the user to enter a number
+# Check the number to see if it's larger than 5 and output a message
+# If it's not larger than 5 output a message
+# Focus on proper formatting and readability
+# Comment your code if necessary
+#
+#
+# This while loop restarts the script:
+while true
+  do
+    clear
+    # Asking user's input:
+    echo
+    echo "Please enter a whole number, (preferably greater than 5):"
+    echo
+    read "VAR1"
+    # Evaluating the input:
+    if [ "$VAR1" -gt 5 ] 2>/dev/null
+      then
+        echo
+        echo "Awesome! "$VAR1" is greater than 5!"
+      else
+        echo
+        echo "Oops, "$VAR1" is either equal to 5, smaller than 5, or is NOT a whole number all together..."
+    fi
+    echo
+    read -r -p "Would you like to test a different number? [y/N] " "response"
+    if [ "$response" = y ]
+      then
+        echo
+      else
+        echo
+        break
+    fi
+done

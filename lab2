@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Lab Objective: Prompt the user for a number and check to see if it's an EVEN number.
+#
+# Create a script called lab2.sh
+# Prompt the user to enter a number
+# Make sure the input is a number
+# Check the number to see if the number is even/odd
+# If it's even output a message
+# If it's odd output a message
+# Focus on proper formatting and readability
+# It should handle ANY base 10 integers (even 0 or numbers prefixed by 0)
+# Comment your code if necessary
+#
+#
+# Asking the user for an input:
+clear
+echo
+echo "Please enter a whole number:"
+while true
+  do
+    echo
+    read "VAR1"
+    # Removing first possible minus sign of a negative number to deal with absolute values only.
+    # https://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion
+    # Note: only one minus sign at the beginning of the string is removed;
+    # subsequent minus signs in the input are untouched, so --5, -3-, and 9-5 would not pass the subsequent tests.
+    VAR2=${VAR1#-}
+    # Checking if remaining characters are only numbers from 0 to 9; this eliminates strings and fractions:
+    if [[ "$VAR2" =~ ^[0-9]+$ ]]
+      then
+        echo
+        break
+    fi
+  clear
+  echo
+  echo "You entered "$VAR1". This is is not a whole number."
+  echo
+  echo "Please enter a whole number, i.e. 2, -17, etc.:"
+done
+#
+#
+# Making sure numbers with leading zeros are interpreted as decimal numbers, not octal.
+# Introducing VAR3 for ease of testing/troubleshooting:
+VAR3=$((10#$VAR2))
+#
+#
+# Evaluating the user input to see if it's an even/odd number.
+if [ $((VAR3%2)) -eq 0 ]
+  then
+    echo "The number "$VAR1" is an even number!"
+  else
+    echo "The number "$VAR1" is an odd number."
+fi
+echo
+#
+#
+# Asking the user if s/he wants to restart the script:
+read -r -p "Would you like to test a different number? [y/N] " response
+case $response in
+  ([yY][eE][sS]|[yY])
+  # Restarting the script without creating a subshell.
+  # Credits to https://www.gnu.org/software/bash/manual/bashref.html#index-exec
+  exec $0
+  ;;
+  *)
+    echo
+    echo "It was fun! Thanks!!!"
+    echo
+  ;;
+esac
