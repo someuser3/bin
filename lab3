@@ -1,0 +1,43 @@
+# Lab Objective: Check a users ID and if they're root then display a message
+# saying it's insecure to run this script as root. If they are not root then
+# get their home directory from the /etc/password file and display the size
+# of the contents of it.
+#
+# 1. Get the users ID
+# 2. Exit if the user is root
+# 3. If the user is not root make sure their userid is larger than 500
+# 4. Check to see if /etc/password exists and is readable
+# 5. Get the users home directory from /etc/passwd
+# 6. Display the size of their home directory
+#
+#
+#
+clear
+echo
+# Informing the user what we are about to do and soliciting user input:
+read -r -p "Would you like to see all files in your home directory and how much disk space they consume? [y/N] " response
+echo
+case $response in
+  ([yY][eE][sS]|[yY])
+# First let's see if the user is a root:
+if [ $USER = root ]
+  then
+    echo "It is insecure to run this script as "$USER". Please login as a regular user and try again."
+  elif [ -r /etc/passwd ] # Checking to see if this user can read /etc/passwd
+    then
+    # Checking if User ID is greater than 500:
+    if [ $UID -gt 500 ]
+      then
+        # Pulling user home directory from /etc/passwd
+        UserHome=`grep ^$USER < /etc/passwd | awk -F : '{print $6}'`    
+        du -hac $UserHome
+      else
+        echo "It is insecure to run this script under a system account. Please login as a regular user and try again."
+    fi
+fi
+echo
+;;
+*)
+  echo "Well, thanks for checking anyways! :)"
+  echo
+esac
