@@ -1,6 +1,6 @@
 # Lab Objective: Check a users ID and if they're root then display a message
 # saying it's insecure to run this script as root. If they are not root then
-# get their home directory from the /etc/password file and display the size
+# get their home directory from the /etc/passwd file and display the size
 # of the contents of it.
 #
 # 1. Get the users ID
@@ -11,7 +11,6 @@
 # 6. Display the size of their home directory
 #
 #
-#
 clear
 echo
 # Informing the user what we are about to do and soliciting user input:
@@ -19,25 +18,29 @@ read -r -p "Would you like to see all files in your home directory and how much 
 echo
 case $response in
   ([yY][eE][sS]|[yY])
-# First let's see if the user is a root:
-if [ $USER = root ]
-  then
-    echo "It is insecure to run this script as "$USER". Please login as a regular user and try again."
-  elif [ -r /etc/passwd ] # Checking to see if this user can read /etc/passwd
+  # First let's see if the user is a root:
+  if [ $USER = root ]
     then
-    # Checking if User ID is greater than 500:
-    if [ $UID -gt 500 ]
+      echo "It is insecure to run this script as "$USER". Please run this script as a regular user and try again."
+      exit 3
+    elif [ -r /etc/passwd ] # Checking to see if this user can read /etc/passwd
       then
-        # Pulling user home directory from /etc/passwd
-        UserHome=`grep ^$USER < /etc/passwd | awk -F : '{print $6}'`    
-        du -hac $UserHome
+        # Checking if User ID is greater than 500:
+        if [ $UID -gt 500 ]
+          then
+            # Pulling user's home directory from /etc/passwd and printing disk usage of that directory:
+            du -hac `grep ^$USER: < /etc/passwd | awk -F : '{print $6}'`
+          else
+            echo "It is insecure to run this script under a system account. Please run this script as a regular user and try again."
+            exit 4
+        fi
       else
-        echo "It is insecure to run this script under a system account. Please login as a regular user and try again."
+        echo "Error 403. The script cannot continue."
+        exit 403
     fi
-fi
-echo
-;;
-*)
-  echo "Well, thanks for checking anyways! :)"
-  echo
+    echo
+    ;;
+  *)
+    echo "Well, thanks for checking anyways! :)"
+    echo
 esac
