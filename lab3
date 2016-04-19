@@ -1,4 +1,6 @@
-# Lab Objective: Check a users ID and if they're root then display a message
+#!/bin/bash
+#
+# Lab Objective: Check a user's ID and if they're root then display a message
 # saying it's insecure to run this script as root. If they are not root then
 # get their home directory from the /etc/passwd file and display the size
 # of the contents of it.
@@ -22,6 +24,7 @@ case $response in
   if [ $USER = root ]
     then
       echo "It is insecure to run this script as "$USER". Please run this script as a regular user and try again."
+      echo
       exit 3
     elif [ -r /etc/passwd ] # Checking to see if this user can read /etc/passwd
       then
@@ -32,13 +35,14 @@ case $response in
             du -hac `grep ^$USER: < /etc/passwd | awk -F : '{print $6}'`
           else
             echo "It is insecure to run this script under a system account. Please run this script as a regular user and try again."
+            echo
             exit 4
         fi
       else
         echo "Error 403. The script cannot continue."
+        echo
         exit 403
     fi
-    echo
     ;;
   *)
     echo "Well, thanks for checking anyways! :)"
