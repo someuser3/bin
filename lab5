@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# Lab Objective: Loop through data and act on each entry
+#
+# Loop through the items in medialist.txt
+# Check to see if each item exists in the medialab directory
+# If it does - output the name to a new file called foundfiles.txt
+# If it doesn't - output the name to a new file called lostfiles.txt
+# Save your script as lab5.sh
+
+# Cleaning up before we start:
+rm -f foundfiles.txt
+rm -f lostfiles.txt
+
+# Checking if medial list file has been supplied:
+if [ -z "$1" ]
+  then 
+    echo "Please supply a file to use with the script. For instance, type (without quotes) \"$0 medialist.txt\""
+    exit 123 
+  else
+    IFSOLD=$IFS
+    IFS=$'\n'
+    for file in $(cat $1)
+      do
+        if [ -f $file ]
+          then
+            echo "$file" >> foundfiles.txt
+          else
+            echo "$file" >> lostfiles.txt
+        fi
+    done
+    IFS=$IFSOLD
+    echo
+    echo "Number of files found:"
+    wc -l < foundfiles.txt
+    echo "Number of missing files:"
+    wc -l < lostfiles.txt
+    echo
+fi
