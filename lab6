@@ -26,7 +26,7 @@ OldIFS=#IFS
 IFS=$'\n'
 #
 # Generating an array with all filenames in the medialab directory:
-FILEARRAY=(`ls medialab | grep -vE "media"`)
+FILEARRAY=(`ls -1 medialab | grep -vE "media"`)
 # Saving an array to a temp file for a later processing;
 printf '%s\n' "${FILEARRAY[@]}" > file.tmp
 #
@@ -36,7 +36,6 @@ XMLARRAY=(`grep filename < medialab/media.xml | awk -F'[<|>]' '{print $3}' | sor
 printf '%s\n' "${XMLARRAY[@]}" > xml.tmp
 #
 # Comparing the two arrays and creating a common list;
-# In the future may get rid of slow nested for loops and use awk:
 for EXTVAR in "${XMLARRAY[@]}"; do
   for INTVAR in "${FILEARRAY[@]}"; do
     if [ "$EXTVAR" == "$INTVAR" ]
