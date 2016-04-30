@@ -1,0 +1,62 @@
+#!/bin/bash
+# Lab Objective: Using the last line of /var/share/CS225/addresses.csv gather each field
+# into the following variables using bash pattern substitution. Do NOT use awk for this!
+#
+# FNAME
+# LNAME
+# COMPANY
+# STREET
+# CITY
+# STATE
+# ZIP
+# HPHONE
+# WPHONE
+# EMAIL
+# WEBURL
+#
+# Sample line from the addresses.csv file:
+# "Joey","Bolick","Utility Trailer Sales","7700 N Council Rd","Oklahoma City","Oklahoma","OK","73132","405-728-5972","405-728-5244","joey@bolick.com","http://www.joeybolick.com"
+#
+#
+# Checking if a filename has been supplied:
+if [ -z "$1" ]
+  then 
+    echo "Usage:"
+    echo "$0 /var/share/CS225/addresses.csv"
+    exit 123
+  else
+    VAR1=$(tac $1|grep --max-count=1 .)	# Getting the last non-empty line from the input file into a temp variable.
+    VAR1=${VAR1//\"}			# Removing all the " from the temp varialbe.
+    FNAME=${VAR1%%,*}			# Copying the first field to a new variable.
+    VAR1=${VAR1#*,}			# Removing the first field from temp variable.
+    LNAME=${VAR1%%,*}			# Copying the first of remaining fields to a new variable.
+    VAR1=${VAR1#*,}			# Removing the first of remaining fields from a temp variable.
+    COMPANY=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    STREET=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    CITY=${VAR1%%,*}
+    VAR1=${VAR1#*,}; VAR1=${VAR1#*,}	# Removing first field twice since County field is not needed.
+    STATE=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    ZIP=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    HPHONE=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    WPHONE=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    EMAIL=${VAR1%%,*}
+    VAR1=${VAR1#*,}
+    WEBURL=${VAR1%%,*}
+    echo "First Name:	$FNAME"
+    echo "Last Name:	$LNAME"
+    echo "Company:	$COMPANY"
+    echo "Address:	$STREET"
+    echo "City:		$CITY"
+    echo "State:		$STATE"
+    echo "Zip Code:	$ZIP"
+    echo "Home Phone:	$HPHONE"
+    echo "Work Phone:	$WPHONE"
+    echo "Email:		$EMAIL"
+    echo "Website:	$WEBURL"
+fi
