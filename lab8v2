@@ -25,7 +25,7 @@ if [ -z "$1" ]
     echo "$0 /var/share/CS225/addresses.csv"
     exit 123
   else
-    TEMP=$(tac $1|grep --max-count=1 .)	# Getting the last non-empty line from the input file into a temp variable.
+    TEMP=$(tac $1|grep --max-count=1 .)	# Getting the last non-empty line from the input file into a temp variable; credits: http://stackoverflow.com/a/2639060
     for VAR1 in FNAME LNAME COMPANY STREET CITY COUNTY STATE ZIP HPHONE WPHONE EMAIL WEBURL; do
       eval ${VAR1}="${TEMP%%,*}"	# Assigning the first field of the temp variable to another variable.
       TEMP=${TEMP#*,}			# Removing the first field from temp variable.
