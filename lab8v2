@@ -1,0 +1,44 @@
+#!/bin/bash
+# Lab Objective: Using the last line of /var/share/CS225/addresses.csv gather each field
+# into the following variables using bash pattern substitution. Do NOT use awk for this!
+#
+# FNAME
+# LNAME
+# COMPANY
+# STREET
+# CITY
+# STATE
+# ZIP
+# HPHONE
+# WPHONE
+# EMAIL
+# WEBURL
+#
+# Sample line from the addresses.csv file:
+# "Joey","Bolick","Utility Trailer Sales","7700 N Council Rd","Oklahoma City","Oklahoma","OK","73132","405-728-5972","405-728-5244","joey@bolick.com","http://www.joeybolick.com"
+#
+#
+# Checking if a filename has been supplied:
+if [ -z "$1" ]
+  then 
+    echo "Usage:"
+    echo "$0 /var/share/CS225/addresses.csv"
+    exit 123
+  else
+    TEMP=$(tac $1|grep --max-count=1 .)	# Getting the last non-empty line from the input file into a temp variable.
+    for VAR1 in FNAME LNAME COMPANY STREET CITY COUNTY STATE ZIP HPHONE WPHONE EMAIL WEBURL; do
+      eval ${VAR1}="${TEMP%%,*}"	# Assigning the first field of the temp variable to another variable.
+      TEMP=${TEMP#*,}			# Removing the first field from temp variable.
+    done
+    echo "First Name:	$FNAME"
+    echo "Last Name:	$LNAME"
+    echo "Company:	$COMPANY"
+    echo "Address:	$STREET"
+    echo "City:		$CITY"
+    echo "State:		$STATE"
+    echo "Zip Code:	$ZIP"
+    echo "Home Phone:	$HPHONE"
+    echo "Work Phone:	$WPHONE"
+    echo "Email:		$EMAIL"
+    echo "Website:	$WEBURL"
+fi
