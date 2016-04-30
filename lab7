@@ -1,0 +1,17 @@
+#!/bin/bash
+# Lab Objective: Make a shell script that takes one argument and duplicates the functionality of the basename command using pattern matching.
+#
+# Desired output:
+# lab7.sh /home/bob/test.txt
+# test.txt
+#
+#
+# Checking if a filename has been supplied:
+if [ -z "$1" ]
+  then 
+    echo "Usage:"
+    echo "$0 /home/bob/test.txt"
+    exit 123
+  else
+    echo "${1##*/}"
+fi
