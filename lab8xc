@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Lab Objective: Make a shell script that will take two arguments; complain and exit if the first doesn't exist,
+# and set a default value of 10 if the second doesn't exist.
+#
+# $1 is the first argument
+# $2 is the second argument
+#
+# Note: Using string operators this script is 3 lines long including the #!/bin/bash line.
+
+if [ -z "$1" ]; then echo "Please supply a first argument."; exit 123; fi
+if [ -z "$2" ]; then exit 10; fi
+echo "Success!"
