@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# Lab Objective: Create a script called lab6.sh that will check to see if each media file in the medialab directory is in medialab/media.xml
+#
+# List the filenames in the medialab directory that are not in media.xml
+# Display the number of files in the medialab directory that are not in media.xml
+# List the media files by name in media.xml that do not exist in the medialab directory
+# Display the number of files that are in the media.xml that do not exist in the medialab directory
+# 
+# Desired Output:
+# 
+# Files not in media.xml:
+# file1.mpg
+# file2.mpg
+# file3.mpg
+# Files not in medialab directory:
+# file4.mpg
+# file5.mpg
+# file6.mpg
+# 3 media files in medialab directory that are NOT listed in media.xml
+# 3 media files in media.xml that are NOT in medialab directory
+
+# Changing field separator so filenames with spaces translate properly:
+OldIFS=#IFS
+IFS=$'\n'
+
+# Saving all the filenames in the medialab directory to a temp file:
+ls -1 medialab > file.tmp
+
+# Saving all the filenames from the XML file to a temp file:
+grep filename < medialab/media.xml | awk -F'[<|>]' '{print $3}' | sort | uniq | grep -ve '^$' > xml.tmp
+# ^ The last grep above removes an empty line; credits: http://stackoverflow.com/a/3432574
+
+# Checking if XML file is missing any of the files in the medialab directory.
+# Using while loop to read file: http://mywiki.wooledge.org/DontReadLinesWithFor
+# Style credits: http://stackoverflow.com/a/1521498
+echo "Files not in media.xml:"
+while read FILE; do
+  if ! grep -q "$FILE" xml.tmp
+    then
+      echo "$FILE"
+      (( CounterFile++ ))
+  fi
+done < file.tmp
+
+# Checking if the XML file contains any filenames non-existent in the medialab directory.
+echo
+echo "Files not in medialab directory:"
+while read LINE; do
+  if [[ ! -f medialab/$LINE ]]
+    then
+      echo "$LINE"
+      (( CounterXML++ ))
+  fi
+done < xml.tmp
+echo
+echo "$CounterFile media files in medialab directory that are NOT listed in media.xml"
+echo "$CounterXML media files in media.xml that are NOT in medialab directory"
+echo
+
+# Cleaning up:
+IFS=$OldIFS
+rm -f file.tmp
+rm -f xml.tmp
