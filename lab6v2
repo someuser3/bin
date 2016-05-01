@@ -33,16 +33,17 @@ grep filename < medialab/media.xml | awk -F'[<|>]' '{print $3}' | sort | uniq > 
 
 # Using comm to compare files:
 echo "Files not in media.xml:"
-comm -23 file.tmp xml.tmp
-echo " Files not in medialab directory:"
-comm -13 file.tmp xml.tmp
+comm -23 file.tmp xml.tmp | tee xmlcount.tmp
+echo "Files not in medialab directory:"
+comm -13 file.tmp xml.tmp | tee filecount.tmp
 echo
-echo "`comm -23 file.tmp xml.tmp | wc -l` media files in medialab directory that are NOT listed in media.xml"
-echo "`comm -13 file.tmp xml.tmp | wc -l` media files in media.xml that are NOT in medialab directory"
+echo "$(wc -l < xmlcount.tmp) media files in medialab directory that are NOT listed in media.xml"
+echo "$(wc -l < filecount.tmp) media files in media.xml that are NOT in medialab directory"
 echo
 
 # Cleaning up:
 IFS=$OldIFS
-exit
 rm -f file.tmp
+rm -f filecount.tmp
 rm -f xml.tmp
+rm -f xmlcount.tmp

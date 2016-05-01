@@ -19,34 +19,34 @@
 # file6.mpg
 # 3 media files in medialab directory that are NOT listed in media.xml
 # 3 media files in media.xml that are NOT in medialab directory
-#
-#
-# Changing field separator so filenames with spaces translated properly:
+
+
+# Changing field separator so filenames with spaces translate properly:
 OldIFS=#IFS
 IFS=$'\n'
-#
+
 # Saving all the filenames in the medialab directory to a temp file:
 ls -1 medialab > file.tmp
-#
+
 # Saving all the filenames from the XML file to a temp file:
 grep filename < medialab/media.xml | awk -F'[<|>]' '{print $3}' | sort -r | uniq > xml.tmp
-#
+
 # Checking if files with filenames from XML file exist and creating a common list;
 # Using while loop to read file due to reasons described here: http://mywiki.wooledge.org/DontReadLinesWithFor
-# Style credits: http://stackoverflow.com/questions/1521462/looping-through-the-content-of-a-file-in-bash
+# Style credits: http://stackoverflow.com/a/1521498
 while read LINE; do
   if [[ -f medialab/$LINE ]]
     then
       echo $LINE >> CommonList.tmp
   fi
 done < xml.tmp
-#
+
 # Adding the common list to both temp files to prepare for awk processing:
 cat CommonList.tmp >> file.tmp
 cat CommonList.tmp >> xml.tmp
-#
-# Generating the output. Awk eliminates duplicates and outputs only unique values; credits:
-# http://stackoverflow.com/questions/23740545/how-to-print-only-the-unique-lines-in-bash
+
+# Generating the output. Awk eliminates duplicates and outputs only unique values.
+# Credits: http://stackoverflow.com/a/23740629
 echo "Files not in media.xml:"
 awk '{!seen[$0]++};END{for(i in seen) if(seen[i]==1)print i}' file.tmp > ufile.tmp
 # ^ Sending the awk output to another temp file to simplify file count below.
@@ -54,13 +54,12 @@ cat ufile.tmp
 echo
 echo "Files not in medialab directory:"
 awk '{!seen[$0]++};END{for(i in seen) if(seen[i]==1)print i}' xml.tmp | grep -ve '^$' > uxml.tmp
-# ^ The last grep above removes an empty line; credits:
-# http://stackoverflow.com/questions/3432555/remove-blank-lines-with-grep
+# ^ The last grep above removes an empty line; credits: http://stackoverflow.com/a/3432574
 cat uxml.tmp
 echo
-echo "`wc -l < ufile.tmp` media files in medialab directory that are NOT listed in media.xml"
-echo "`wc -l < uxml.tmp` media files in media.xml that are NOT in medialab directory"
-#
+echo "$(wc -l < ufile.tmp) media files in medialab directory that are NOT listed in media.xml"
+echo "$(wc -l < uxml.tmp) media files in media.xml that are NOT in medialab directory"
+
 # Cleaning up:
 IFS=$OldIFS
 rm -f file.tmp
