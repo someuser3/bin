@@ -8,6 +8,11 @@
 #
 # Note: Using string operators this script is 3 lines long including the #!/bin/bash line.
 
-if [ -z "$1" ]; then echo "Please supply a first argument."; exit 123; fi
-if [ -z "$2" ]; then exit 10; fi
-echo "Success!"
+VAR1="${1?Error; an argument is not defined}"
+VAR2="${2:-10}"
+
+# See here: http://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html
+# More information: https://bash.cyberciti.biz/guide/Default_shell_variables_value
+# Test lines:
+echo "$VAR1"
+echo "$VAR2"
