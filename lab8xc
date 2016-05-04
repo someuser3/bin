@@ -24,8 +24,8 @@ echo "Number of positional parameters: "$#""
 # http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02
 
 
-# Alternatively, there is a way to re-set positional paramenters $1 and $2 on one line.
-# More work is needed if more than two parameners are expected because the following set
+# Alternatively, there is a way to re-set positional parameters $1 and $2 on one line.
+# More work is needed if more than two parameters are expected because the following set
 # command will wipe all but $1 and $2 parameters. See http://stackoverflow.com/a/4827707
 set -- "${1:?Error; an argument is not defined}" "${2:-10}"
 
