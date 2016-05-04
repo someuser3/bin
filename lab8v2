@@ -14,32 +14,37 @@
 # EMAIL
 # WEBURL
 #
-# Sample line from the addresses.csv file:
+# Sample line from the addresses.csv file (note comma in the third field):
 # "Jeri","Farstvedt","Regan, Denis J Esq","16133 Ventura Blvd #-700","Encino","Los Angeles","CA","91436","818-986-8843","818-986-6786","jeri@farstvedt.com","http://www.jerifarstvedt.com"
 
-
-# Checking if a filename has been supplied:
-if [ -z "$1" ]
-  then 
+if [ -z "$1" ]					# Checking if input parameter has been supplied.
+  then
     echo "Usage:"
     echo "${0##*/} /var/share/CS225/addresses.csv"
     exit 123
-  else
-    TEMP=$(tac $1|grep --max-count=1 .)		# Getting the last non-empty line from the input file into a temp variable; credits: http://stackoverflow.com/a/2639060
-    TEMP=${TEMP#\"}; TEMP=${TEMP%\"}		# Removing fist and last " from the input
-    for VAR1 in FNAME LNAME COMPANY STREET CITY COUNTY STATE ZIP HPHONE WPHONE EMAIL WEBURL; do
-      eval "${VAR1}=\"${TEMP%%\",\"*}\""	# Assigning the first field of the temp variable to another variable
-      TEMP=${TEMP#*\",\"}			# Removing the first field from temp variable
-    done
-    echo "First Name:	$FNAME"
-    echo "Last Name:	$LNAME"
-    echo "Company:	$COMPANY"
-    echo "Address:	$STREET"
-    echo "City:		$CITY"
-    echo "State:		$STATE"
-    echo "Zip Code:	$ZIP"
-    echo "Home Phone:	$HPHONE"
-    echo "Work Phone:	$WPHONE"
-    echo "Email:		$EMAIL"
-    echo "Website:	$WEBURL"
+  elif [ ! -f $1 ]				# Checking if supplied parameter is a file.
+    then
+      echo "Usage:"
+      echo "${0##*/} /var/share/CS225/addresses.csv"
+      echo
+      echo "Cannot open "$1" for reading; exiting..."
+      exit 403
 fi
+
+TEMP=$(tac $1|grep --max-count=1 .)		# Getting the last non-empty line from the input file into a temp variable; credits: http://stackoverflow.com/a/2639060
+TEMP=${TEMP#\"}; TEMP=${TEMP%\"}		# Removing fist and last " from the input
+for VAR1 in FNAME LNAME COMPANY STREET CITY COUNTY STATE ZIP HPHONE WPHONE EMAIL WEBURL; do
+  eval "${VAR1}=\"${TEMP%%\",\"*}\""		# Assigning the first field of the temp variable to another variable
+  TEMP=${TEMP#*\",\"}				# Removing the first field from temp variable
+done
+echo "First Name:	$FNAME"
+echo "Last Name:	$LNAME"
+echo "Company:	$COMPANY"
+echo "Address:	$STREET"
+echo "City:		$CITY"
+echo "State:		$STATE"
+echo "Zip Code:	$ZIP"
+echo "Home Phone:	$HPHONE"
+echo "Work Phone:	$WPHONE"
+echo "Email:		$EMAIL"
+echo "Website:	$WEBURL"
