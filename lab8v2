@@ -26,9 +26,11 @@ if [ -z "$1" ]
     exit 123
   else
     TEMP=$(tac $1|grep --max-count=1 .)	# Getting the last non-empty line from the input file into a temp variable; credits: http://stackoverflow.com/a/2639060
+    TEMP=${TEMP#\"}
+    TEMP=${TEMP%\"}
     for VAR1 in FNAME LNAME COMPANY STREET CITY COUNTY STATE ZIP HPHONE WPHONE EMAIL WEBURL; do
-      eval ${VAR1}="${TEMP%%,*}"	# Assigning the first field of the temp variable to another variable.
-      TEMP=${TEMP#*,}			# Removing the first field from temp variable.
+      eval "${VAR1}=\"${TEMP%%\",\"*}\""	# Assigning the first field of the temp variable to another variable.
+      TEMP=${TEMP#*\",\"}			# Removing the first field from temp variable.
     done
     echo "First Name:	$FNAME"
     echo "Last Name:	$LNAME"
