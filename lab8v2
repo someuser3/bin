@@ -29,7 +29,7 @@ if [ -z "$1" ]
     TEMP=${TEMP#\"}
     TEMP=${TEMP%\"}
     for VAR1 in FNAME LNAME COMPANY STREET CITY COUNTY STATE ZIP HPHONE WPHONE EMAIL WEBURL; do
-      eval "${VAR1}=\"${TEMP%%\",\"*}\""	# Assigning the first field of the temp variable to another variable.
+      eval "${VAR1}='${TEMP%%\",\"*}'"	# Assigning the first field of the temp variable to another variable.
       TEMP=${TEMP#*\",\"}			# Removing the first field from temp variable.
     done
     echo "First Name:	$FNAME"
