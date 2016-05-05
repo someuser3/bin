@@ -1,0 +1,32 @@
+#!/bin/bash
+# Fun script inspired by http://bash.im/quote/147869
+
+echo -n "Sheep:"
+printf "%40.40s\n" "Other thoughts:"
+ASLEEP="NO"
+SHEEP=0
+while [ "$ASLEEP" == "NO" ]
+  do
+    THOUGHTS=$((RANDOM%1001))
+    if [ $THOUGHTS -gt 0 ]
+      then
+        ((SHEEP++))
+        echo -n $SHEEP
+        printf "%40.40s\n" "$THOUGHTS"
+        sleep $(bc <<< "scale=3;$THOUGHTS/5555")
+      else
+        ASLEEP="YES"
+    fi
+    if [ $THOUGHTS -gt 999 ]
+      then
+        echo "/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\"
+        echo "| Man, I need to calm down and fall asleep faster!!! |"
+        echo "\\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/"
+    fi
+    if [ $((SHEEP%20)) -eq 0 ]
+      then
+        echo -n "Sheep:"
+        printf "%40.40s\n" "Other thoughts:"
+    fi
+done
+echo "Sweet dreams! :)"
