@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# Lab Objective: Create a script that parses commandline arguments and options.
+#
+# The script should take these options:
+#  -d - turns on debugging (set -x)
+#  -v - sets the VERBOSE variable to true
+#  -h - prints out a help message with the name of the script (and no path information) plus the options
+#  -n <name> - takes a name argument and prints a message on the screen
+#  -l <dir> - have it list the directory using a for loop or ls (ask yes/no before proceeding)
+# any other options - prints the help message and exits
+# Puts all additional arguments in $1 $2 etc.
+
+clear
+# Saving options to process them later:
+while getopts :dhl:n:v OPT; do
+  case "$OPT" in
+    d) set -x;;
+    v) VERBOSE=TRUE;;
+    n) NAME=$OPTARG;;
+    l) DIR=$OPTARG;;
+    h) HELP=WANTED;;
+    *) ERROR=OOPS;;
+  esac
+done
+echo
+
+#Exiting on error:
+if [ ! -z $ERROR ]; then
+  echo "Argument passed to the script is not a valid option."
+  echo "Please run ${0##*/} -h for usage information."
+  echo
+  exit 123
+fi
+
+# Processing -h option:
+if [ ! -z $HELP ]; then
+  echo "This script is designed to list contents of a directory."
+  echo "Usage:"
+  echo " ${0##*/} -d		Turns on debugging information"
+  echo " ${0##*/} -h		Prints this message and exits"
+  echo " ${0##*/} -l DIRECTORY	Lists contents of the DIRECTORY"
+  echo " ${0##*/} -n NAME		Displays greeting usng user's NAME"
+  echo " ${0##*/} -v		Prints verbose information"
+  echo
+  exit
+fi
+
+# Processing -n option:
+if [ ! -z $NAME ]; then
+  echo "Greetings, "$NAME!""
+  echo
+fi
+
+# Processing -l option with optional -v:
+if [ -z $DIR ]; then :
+  elif [ ! -d $DIR ]; then
+    echo "Unfortunately, the argument "$DIR" passed with -l is not a directory."
+    echo "Please run ${0##*/} -h for usage information."
+    echo; exit 124
+    elif [ ! -r $DIR ]
+      then
+        echo "Unable to open "$DIR" directory for reading; exiting..."
+        exit 125
+      else
+        read -n1 -p "Would you like to list contents of the "$DIR" direcory? [y/N]: " RESPONSE
+        echo; echo
+        case $RESPONSE in
+          y|Y) if [ -z $VERBOSE ]
+                 then echo "Contents of the "$DIR" directory:"; ls -1 $DIR
+                 else echo "Contents of the "$DIR" directory:"; ls -l $DIR
+               fi;;
+          *) :;;
+        esac
+fi
+echo
+
+# Removing options, keeping additional arguments:
+shift $[ $OPTIND - 1 ]
+
+# Processing the additional arguments for the sake of processing:
+COUNT=1
+for ARG in "$@"; do
+  echo "Argument "$COUNT": "$ARG""
+  ((COUNT++))
+done
+echo
