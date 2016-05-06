@@ -11,9 +11,10 @@
 # any other options - prints the help message and exits
 # Puts all additional arguments in $1 $2 etc.
 
-clear
 # Saving options to process them later:
+COUNT=1
 while getopts :dhl:n:v OPT; do
+  ((COUNT++))
   case "$OPT" in
     d) set -x;;
     v) VERBOSE=TRUE;;
@@ -25,8 +26,9 @@ while getopts :dhl:n:v OPT; do
 done
 echo
 
-#Exiting on error:
-if [ ! -z $ERROR ]; then
+# Exiting on error or if no arguments have been passed;
+# Credits: http://stackoverflow.com/a/3826462
+if [ \( ! -z "$ERROR" \) -o \( "$COUNT" == 1 \) ]; then
   echo "Argument passed to the script is not a valid option."
   echo "Please run ${0##*/} -h for usage information."
   echo
@@ -55,7 +57,7 @@ fi
 # Processing -l option with optional -v:
 if [ -z $DIR ]; then :
   elif [ ! -d $DIR ]; then
-    echo "Unfortunately, the argument "$DIR" passed with -l is not a directory."
+    echo "Unfortunately, "$DIR" is not a directory."
     echo "Please run ${0##*/} -h for usage information."
     echo; exit 124
     elif [ ! -r $DIR ]
@@ -68,20 +70,20 @@ if [ -z $DIR ]; then :
         case $RESPONSE in
           y|Y) if [ -z $VERBOSE ]
                  then echo "Contents of the "$DIR" directory:"; ls -1 $DIR
-                 else echo "Contents of the "$DIR" directory:"; ls -l $DIR
-               fi;;
+                 else echo "Contents of the "$DIR" directory:"; ls -lA $DIR
+               fi
+               echo;;
           *) :;;
         esac
 fi
-echo
 
 # Removing options, keeping additional arguments:
 shift $[ $OPTIND - 1 ]
 
-# Processing the additional arguments for the sake of processing:
+# Processing additional arguments for the sake of processing:
 COUNT=1
-for ARG in "$@"; do
-  echo "Argument "$COUNT": "$ARG""
+for ARGS in "$@"; do
+  echo "Argument "$COUNT": "$ARGS""
   ((COUNT++))
 done
 echo
