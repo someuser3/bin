@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Lab Objective: Create a script that does work and cleans up if forced to exit
+#
+# Script should list all files, one per line, in the entire OS.
+# The filelist should be stored in a temporary file.
+# If a user presses control-c a function will clean up the temporary file and exit
+#
+#
+# Desired output:
+#
+#     File 1:  testfile.sh
+#     File 2:  testfile2.sh
+#     ...
+
+CLEANUP()
+{
+rm -f $TEMPFILE
+exit
+}
+
+trap "CLEANUP" SIGINT
+
+TEMPFILE="$(mktemp)"
+FILELIST="$(ls -1Ra /*)"
+COUNT="0"
+
+for LINE in $FILELIST; do
+  if [[ ( "$LINE" == "." ) || ("$LINE" == "..") ]]
+    then :
+    else
+      ((COUNT++))
+      echo "File "$COUNT":  "$LINE""
+  fi
+done >> "$TEMPFILE"
+echo
+echo "File list can be found here: $TEMPFILE"
+echo
