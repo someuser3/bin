@@ -1,0 +1,27 @@
+#!/bin/bash
+
+FindDate() {
+YEAR=$(date +%Y -r $1)
+MONTH=$(date +%B -r $1)
+DAY=$(date +%d -r $1)
+}
+
+CheckDir() {
+if [[ ! -d "${FileDir}" ]]; then
+  mkdir -p "${FileDir}"
+fi
+}
+
+CopyFile() {
+if [[ -f ${1} ]]; then
+  echo "File "${1}" already exists in "${FileDir}"; skipping..."
+  break
+fi
+cp -n "$1" "${FileDir}"
+}
+
+MoveFile() {
+mv "$1" "${FileDir}"
+}
+
+
