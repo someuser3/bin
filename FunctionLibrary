@@ -20,17 +20,17 @@ fi
 # Function to check if a file already exist before attempting to move/copy it:
 CheckFile() {
 if [[ -f ${FileDir}/${FILE} ]]; then
-  echo "File with name "${FILE}" already exists in "${FileDir}"; skipping..."
+  echo "File with name '${FILE}' already exists in '${FileDir}'; skipping..."
   continue
 fi
 }
 
 CopyFile() {
 CheckFile
-cp ${LINE} ${FileDir}
+cp ${1} ${FileDir}
 }
 
 MoveFile() {
 CheckFile
-mv ${DIR}/${FILE} ${FileDir}
+mv ${1} ${FileDir}
 }

@@ -52,10 +52,10 @@ DIR="${1}"
 FILELIST="$DIR/*"
 for LINE in ${FILELIST}; do
 FILE="${LINE##*/}"
-echo "Processing file ${FILE}"
+echo "Processing file '${FILE}'"
 if [[ ( -d ${LINE} ) && ( ! -L ${LINE} ) ]]
   then
-    echo "${FILE} is a directory, skipping..."
+    echo "'${FILE}' is a directory, skipping..."
   else
     FindDate ${LINE}
     FileDir=${DIR}/${YEAR}/${MONTH}/${DAY}
@@ -68,3 +68,4 @@ if [[ ( -d ${LINE} ) && ( ! -L ${LINE} ) ]]
     fi
 fi
 done
+echo "No more files to process, exiting."
