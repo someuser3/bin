@@ -20,6 +20,9 @@
 # - lab11.sh
 # - functionLibrary.sh
 
+# Trapping the CTRL+C:
+trap "TRAP" SIGINT
+
 # Linking function library:
 . ./FunctionLibrary
 
@@ -28,39 +31,40 @@ while getopts :fh OPT; do
   case "$OPT" in
     f) FORCE="YES";;
     h) HELP="WANTED";;
-    *) echo "Unknown argument detected. Please run ${0##*/} -h for correct usage information.";;
+    *) echo "Unknown argument detected. Please run ${0##*/} -h for correct usage information."; exit;;
   esac
 done
 
 # Processing -h option:
 if [ ! -z $HELP ]; then
-  echo "This script is designed to create a directory structure based on modified timestamp of all files in a directory."
+  echo -e "This script is designed to create a Year/Month/Day structure inside of a DIRECTORY based on \nthe modified time of all the files in the DIRECTORY, and copy/move files accordingly."
   echo "Usage:"
-  echo " ${0##*/} DIRECTORY		Creates a Month/Day structure inside of a DIRECTORY and copies files accordingly"
-  echo " ${0##*/} -f DIRECTORY		Creates a Month/Day structure inside of a DIRECTORY and MOVES files accordingly"
-  echo " ${0##*/} -h			Prints this message and exits"
+  echo "	${0##*/} DIRECTORY			Creates the Year/Month/Day structure and copies all the files"
+  echo "	${0##*/} -f DIRECTORY		Creates the Year/Month/Day structure and moves all the files"
+  echo "	${0##*/} -h			Prints this message and exits"
   exit
 fi
 
 # Removing options, keeping additional arguments:
-shift $[ $OPTIND - 1 ]
+shift $[ ${OPTIND} - 1 ]
 
-DIRECTORY=${1}
-FILELIST=${DIRECTORY}/*
-
+DIR="${1}"
+FILELIST="$DIR/*"
 for LINE in ${FILELIST}; do
-echo "$LINE"
-  FindDate ${LINE}
-  FileDir="${DIRECTORY}/${YEAR}/${MONTH}/${DAY}"
-  CheckDir
-  if [[ -z ${FORCE} ]]
-    then
-     CopyFile 
-    else
-     MoveFile
-  fi
-sleep 0.1
+FILE="${LINE##*/}"
+echo "Processing file ${FILE}"
+if [[ ( -d ${LINE} ) && ( ! -L ${LINE} ) ]]
+  then
+    echo "${FILE} is a directory, skipping..."
+  else
+    FindDate ${LINE}
+    FileDir=${DIR}/${YEAR}/${MONTH}/${DAY}
+    CheckDir
+    if [[ -z ${FORCE} ]]
+      then
+        CopyFile ${LINE}
+      else
+        MoveFile ${LINE}
+    fi
+fi
 done
-
-
-
