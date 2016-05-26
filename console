@@ -13,16 +13,16 @@
 
 # This section will open four equal terminal windows to fill the four quadrants
 # of my 1280x800 screen (you can change the titles to whatever you want):
-gnome-terminal --geometry=89x22+0+0 -t "Window 1"
-# gnome-terminal --geometry=89x22+640+0 -t "Window 2"
-# gnome-terminal --geometry=89x22+0+400 -t "Window 3"
-# gnome-terminal --geometry=89x22+640+400 -t "Window 4"
+gnome-terminal --hide-menubar --geometry=89x24+0+0 -t "Window 1"
+# gnome-terminal --hide-menubar --geometry=89x24+640+0 -t "Window 2"
+# gnome-terminal --hide-menubar --geometry=89x23+0+400 -t "Window 3"
+# gnome-terminal --hide-menubar --geometry=89x23+640+400 -t "Window 4"
 
 
 # This section will open three terminal windows: two smaller ones to occupy
 # left lower and left upper quadrants of the screen, and one larger window
 # to occupy the right half of the same screen (reusing one line from above):
-gnome-terminal --geometry=89x22+0+400 -t "Window 2"
+gnome-terminal --hide-menubar --geometry=89x23+0+390 -t "Window 2"
 gnome-terminal --geometry=89x48+640+0 -t "Window 3"
 
 # One last thing - move this script to /bin or ~/bin and add the following line
@@ -33,3 +33,4 @@ gnome-terminal --geometry=89x48+640+0 -t "Window 3"
 # Do not forget to uncomment the line; it will add persistent alias.
 # Running 'consoles' will run the 'console' script (open all terminal windows)
 # and exit the parent terminal window.
+
