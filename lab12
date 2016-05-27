@@ -1,0 +1,92 @@
+#!/bin/bash
+# Lab Objective: Create a script with a pseudo multi-dimensional array
+#
+# Create a script that:
+# - Reads in /var/share/CS225/addresses.csv and parses the various parts into separate arrays
+# - Loops through resulting arrays and prints data back onto the screen in the same format as addresses.csv
+#
+# For example:
+#
+# "Byron","Fortuna","Jackson & Collins Pa","700 Sw Higgins Ave","Missoula","Missoula"
+# LNAME[1] should be Byron
+# FNAME[1] should be Fortuna
+# .....
+# When you get done you should have an array for each column and each item number should correspond to a row.
+# Print the results back out by iterating through the NUMBER of rows (get from one of the arrays ${#LNAME[@]}).
+#
+# Script has to include the following:
+# - trap for control-c
+# - uses pattern substitution
+# - uses arrays
+
+# Trapping the CTRL+C:
+NonStop() { 
+echo "Please wait for the operation to complete..."
+}
+trap "NonStop" SIGINT
+
+# Function to remove the first field from the $TMP variable by pattern substitution:
+RemoveFld() {
+TMP=${TMP#*\",\"}
+}
+
+# Function to print a field on the screen:
+Prnt() {
+echo -n "\""$1"\","
+}
+
+# Checking if input parameter has been supplied and providing help messages if needed:
+if [ -z "$1" ]
+  then
+    echo "Usage:"
+    echo "${0##*/} /var/share/CS225/addresses.csv"
+    exit 123
+  elif [[ (! -f $1) || (! -r $1) ]]
+    then
+      echo
+      echo "Usage:"
+      echo "${0##*/} /var/share/CS225/addresses.csv"
+      echo
+      echo "Cannot open "$1" for reading; exiting..."
+      exit 403
+fi
+
+# Reading the file into a temporary array; throwing away the first line:
+readarray -t -O 1 -s 1 TmpArray < ${1}	
+
+# Saving each line of TmpArray with index ${ID1} to multiple arrays with the same index:
+for (( ID1 = 1; ID1 <= ${#TmpArray[@]}; ID1++ ))
+{
+TMP=${TmpArray[${ID1}]}
+TMP=${TMP#\"}; TMP=${TMP%\"}		# Removing the fist and the last " from the input
+FNAME[${ID1}]=${TMP%%\",\"*}; RemoveFld	# Copying the first field to a new array entry with index $ID1
+LNAME[${ID1}]=${TMP%%\",\"*}; RemoveFld	# Copying the second field to a new array entry with index $ID1
+COMPANY[${ID1}]=${TMP%%\",\"*}; RemoveFld
+STREET[${ID1}]=${TMP%%\",\"*}; RemoveFld
+CITY[${ID1}]=${TMP%%\",\"*}; RemoveFld
+COUNTY[${ID1}]=${TMP%%\",\"*}; RemoveFld
+STATE[${ID1}]=${TMP%%\",\"*}; RemoveFld
+ZIP[${ID1}]=${TMP%%\",\"*}; RemoveFld
+HPHONE[${ID1}]=${TMP%%\",\"*}; RemoveFld
+WPHONE[${ID1}]=${TMP%%\",\"*}; RemoveFld
+EMAIL[${ID1}]=${TMP%%\",\"*}; RemoveFld
+WEBURL[${ID1}]=${TMP%%\",\"*}; RemoveFld
+}
+
+# Outputting the arrays' content on the screen:
+for (( ID2 = 1; ID2 <= ${#TmpArray[@]}; ID2++ ))
+{
+echo -n "Line ${ID2}: "
+Prnt "${FNAME[${ID2}]}"
+Prnt "${LNAME[${ID2}]}"
+Prnt "${COMPANY[${ID2}]}"
+Prnt "${STREET[${ID2}]}"
+Prnt "${CITY[${ID2}]}"
+Prnt "${COUNTY[${ID2}]}"
+Prnt "${STATE[${ID2}]}"
+Prnt "${ZIP[${ID2}]}"
+Prnt "${HPHONE[${ID2}]}"
+Prnt "${WPHONE[${ID2}]}"
+Prnt "${EMAIL[${ID2}]}"
+echo "\"${WEBURL[${ID2}]}\""
+}
