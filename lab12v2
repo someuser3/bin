@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Trapping the CTRL+C:
+NonStop() {
+echo "Please wait for the operation to complete..."
+}
+trap "NonStop" SIGINT
+
+# Function to remove the first field from the $TMP variable by pattern substitution:
+RemoveFld() {
+TMP=${TMP#*\",\"}
+}
+
+# Function to print a field on the screen:
+Prnt() {
+echo -n "\""$1"\","
+}
+
+# Checking if input parameter has been supplied and providing help messages if needed:
+if [ -z "$1" ]
+  then
+    echo "Usage:"
+    echo "${0##*/} /var/share/CS225/addresses.csv"
+    exit 123
+  elif [[ (! -f $1) || (! -r $1) ]]
+    then
+      echo
+      echo "Usage:"
+      echo "${0##*/} /var/share/CS225/addresses.csv"
+      echo
+      echo "Cannot open "$1" for reading; exiting..."
+      exit 403
+fi
+
+# Reading the file into a temporary array; throwing away the first line:
+readarray -t -O 1 -s 1 TmpArray < ${1}
+
+# Saving each line of TmpArray with index ${ID1} to multiple arrays with the same index:
+for (( ID1 = 1; ID1 <= ${#TmpArray[@]}; ID1++ ))
+{
+TMP=${TmpArray[${ID1}]}
+TMP=${TMP#\"}; TMP=${TMP%\"}; echo -n "Line ${ID1}: "
+FNAME[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${FNAME[${ID1}]}"
+LNAME[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${LNAME[${ID1}]}"
+COMPANY[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${COMPANY[${ID1}]}"
+STREET[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${STREET[${ID1}]}"
+CITY[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${CITY[${ID1}]}"
+COUNTY[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${COUNTY[${ID1}]}"
+STATE[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${STATE[${ID1}]}"
+ZIP[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${ZIP[${ID1}]}"
+HPHONE[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${HPHONE[${ID1}]}"
+WPHONE[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${WPHONE[${ID1}]}"
+EMAIL[${ID1}]=${TMP%%\",\"*}; RemoveFld; Prnt "${EMAIL[${ID1}]}"
+WEBURL[${ID1}]=${TMP%%\",\"*}; RemoveFld; echo "\"${WEBURL[${ID1}]}\""
+}
