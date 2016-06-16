@@ -2,6 +2,8 @@
 
 . ~/bin/library.sh
 
-check_pkg exiv2
-echo "It's done!"
+if_exiv2
+echo "exif is installed!"
+if_exiftool
+echo "exiftool is installed!"
 
