@@ -1,5 +1,5 @@
 #!/bin/bash
-# This function library works with lab13 script:
+# This function library designed for lab13 script:
 
 TRAP()
 {
@@ -23,7 +23,7 @@ fi
 
 check_pn()
 {
-if [[ ! "$1" =~ ^([\+][0-9]{1,4}(| |-|\.)?)?[0-9]{3}(| |-|\.)?[0-9]{3}(| |-|\.)[0-9]{4}$ ]]
+if [[ ! "$1" =~ ^([\+]?[0-9]{1,4}(| |-|\.)?)?\(?[0-9]{3}[\)]?(| |-|\.)?[0-9]{3}(| |-|\.)[0-9]{4}$ ]]
   then return 1
 fi
 }

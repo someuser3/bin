@@ -13,6 +13,7 @@
 
 # Linking function library file:
 . ~/bin/FunctionLibrary.lab13
+shopt -s extglob
 
 # Trapping CTRL+C:
 trap "TRAP" SIGINT
@@ -20,29 +21,29 @@ trap "TRAP" SIGINT
 # Checking if input parameter has been supplied and providing help messages if needed:
 if [ -z "$1" ]
   then
-    echo "Numerical input expected. The following are correct usage scenarios:"
+    echo "Numerical input is expected; the following are correct usage scenarios:"
+    echo "    ${0##*/} 10.0.0.1              Checks validity of an IP address;"
     echo "    ${0##*/} 123-45-6789           Checks validity of a Social Security number;"
-    echo "    ${0##*/} [+1] 123-456-7890     Checks validity of a telephone number;"
-    echo "    ${0##*/} 1.23.134.245          Checks validity of an IP address;"
-    echo "    ${0##*/} 4123456789098765      Checks validity of a credit card number."
+    echo "    ${0##*/} +1 123-456-7890       Checks validity of a telephone number;"
+    echo "    ${0##*/} 4123-4567-8909-8765   Checks validity of a credit card number."
     exit 123
 fi
 
-# Assigning input to a TEMP variable:
-TEMP="$@"
+# Assigning input to a temporary variable:
+VAR="$@"
 
-if $(check_ip "$TEMP")
+if $(check_ip "$VAR")
   then
-    echo "$TEMP is a valid IP address."
-  elif $(check_ssn "$TEMP")
+    echo "$VAR is a valid IP address."
+  elif $(check_ssn "$VAR")
     then
-      echo "$TEMP is a valid Social Security number."
-    elif $(check_pn "$TEMP")
+      echo "$VAR is a valid Social Security number."
+    elif $(check_pn "$VAR")
       then
-        echo "$TEMP is a valid telephone number."
-      elif $(check_ccn "$TEMP")
+        echo "$VAR is a valid telephone number."
+      elif $(check_ccn "$VAR")
         then
-          echo "$TEMP is a valid Credit Card number."
+          echo "$VAR is a valid Credit Card number."
         else
-          echo "Unable to determine the type of input... For help run ${0##*/} without arguments and try again."
+          echo "Unable to determine the type of input. For help run ${0##*/} without arguments and try again."
 fi
