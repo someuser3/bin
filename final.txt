@@ -1,0 +1,83 @@
+Objective Summary: Create script called final.sh that loops through a directory of media files, gets their creation date from their metadata, creates new directory structure for year, month and day, renames the file including the camera make, model and the date the photo/video was taken then copies or moves the files based on a parameter passed by the user. If the file already exists check to see if they're exactly the same file, if not append a counter to the end of the name. Keep the current extension but change it to lowercase if necessary.
+
+I will be grading on structure, readability and indenting as well. Make your code look professional.
+
+Items to include:
+
+Setup function that creates any temporary directories, initializes variables, ensures external commands exist, packages are installed etc.
+Cleanup function that cleans up when the program exits
+Log function that logs to the system logfile (using the logger command) on important events
+Error function that sends output to stderr and logs to a program specific log file named final-error.log for less important errors such as "files that can't be copied, out of disk space, user interrupt with control-c etc.."
+Message function that outputs normal text to the screen in a pleasant fashion
+Function library.sh that holds as many functions as possible
+Trap for signals INT and TERM that runs the cleanup function
+Use getopts to take the following options
+-f  (force mode for moving files)
+-d (debug mode)
+ 
+
+Functionality:
+
+Script will loop through all files in in a directory (passed as an argument) and identify the type of file
+
+For any jpg or movie files get the creation time, date and camera make/model from the embedded metadata data (EXIF if available)
+Create a directory structure using largest time measurement unit to smallest eg. 2014/08/24/
+Either copy or move files (depending on the status of the -f option) while renaming the files according to
+camera make
+model
+create time
+postfix (-1,-2 etc)  if there's already a file by that name that is NOT the same file (use a checksum to check)
+Use the same extension that the file currently has but change it to lower case if necessary (JPG = jpg)
+If there are spaces or other odd characters in the name deal with them
+If the creation date or time are not present in the EXIF data use the system last modified date/time
+If the Camera make/model is not present set it to Unknown.
+Example: For a photo created with a Canon S80 on at 8:30:16 on August 8th, 2014 that is the SECOND photo taken this second - 2014-8-24_8-30-16_Canon-S80_2.jpg. 
+Keep a log of what your script copies/moves so you can refer to it later. This log should be stored in the users home directory and named final.log. Output of the log should have the date/time and the function eg. copied <source file path> to <destination file path>.
+Example: Jun 14 16:05:35 2015: Copied /root/finalfiles/file.jpg to /root/Photos/2014/08/24/2014-8-24_8-30-16_Canon-S80_2.jpg" 
+Echo on the screen the current file being processed, the number of the current file and the total number of files.
+Example:  Copying file 1 of 2014 - file.jpg to Photos/2014/08/24/2014-8-24_8-30-16_Canon-S80_2.jpg
+Echo out a summary upon completion that includes
+The number of JPEGs copied/moved
+The number of JPEGs that were the same and not copied
+The number of movies copied/moved
+The number of movies that were the same and were not copied
+ 
+
+Hints:
+
+You probably want to deal with photos and movies in separate loops
+Ask yourself "What am I looping through, and what do I want to do with each item?"
+You probably want to draw out your flow first in whatever manner that makes sense to you - don't just barrel into this one
+Write in baby steps - make sure your loop works, get some info for the file, do something to it, add logging etc..
+Test all commands and pattern substitution on the commandline before using it
+Keep a test.sh script around to write functions and test them in a simple environment - eg. have test.sh source your library.sh and just call one function to see if it works. If it does then call it in your main script.
+Use bash -x to troubleshoot your script
+Place a read blank in your loop when you do bash -x so you can troubleshoot one iteration at a time 
+Upload your script every so often to Canvas - I see the most recent version when I grade. This way if something happens and you lose your work you can just download it and keep working - poor mans git.
+ 
+
+Pre-reqs:
+
+Copy /var/share/CS225/finalfiles.tar.gz to your home directory and extract it. 
+ 
+
+Commands/features you may need:
+
+grep
+awk
+exiv2/exiftool/stat?
+cp
+mv
+mkdir
+logger
+echo/printf
+tail
+md5sum
+parameter substitution
+getopts
+ 
+
+Files to Upload:
+
+final.sh
+library.sh
